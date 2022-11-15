@@ -1,17 +1,17 @@
 #! usr/bin/python
 # encoding=utf-8
 
-import socket
 import codecs
+import socket
 import time
-from threading import Thread
 from collections import deque
 from multiprocessing import Process, cpu_count
+from threading import Thread
 
 import bencoder
 
-from .utils import get_logger, get_nodes_info, get_rand_id, get_neighbor
 from .database import RedisClient
+from .utils import get_logger, get_nodes_info, get_rand_id, get_neighbor
 
 # 服务器 tracker
 BOOTSTRAP_NODES = [
@@ -230,7 +230,9 @@ class DHTServer:
             if len(nid) != PER_NID_LEN or ip == self.bind_ip:
                 continue
             # 将节点加入双端队列
+
             self.nodes.append(HNode(nid, ip, port))
+            self.rc.add_kv("node", nid + "|" + ip + "|" + port)
 
     def on_get_peers_request(self, msg, address):
         """
